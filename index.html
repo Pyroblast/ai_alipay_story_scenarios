@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 支付宝｜有故事感场景示例</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: rgba(255,255,255,0.88);
+      --text: #18212f;
+      --sub: #5b6472;
+      --blue: #1677ff;
+      --blue-soft: rgba(22,119,255,0.10);
+      --line: rgba(24,33,47,0.08);
+      --shadow: 0 12px 40px rgba(19, 35, 67, 0.08);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(22,119,255,0.12), transparent 28%),
+        radial-gradient(circle at left top, rgba(67, 145, 255, 0.10), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .wrap {
+      width: min(1180px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 32px 0 64px;
+    }
+    .hero {
+      padding: 34px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero:before {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(22,119,255,0.16), rgba(22,119,255,0));
+    }
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    h1 {
+      margin: 16px 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .lead {
+      margin: 0;
+      color: var(--sub);
+      font-size: 16px;
+      max-width: 860px;
+    }
+    .grid-3, .grid-2, .scenario-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); margin-top: 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .meta-card {
+      padding: 22px;
+    }
+    .meta-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .meta-card p, .meta-card li {
+      margin: 0;
+      color: var(--sub);
+      font-size: 15px;
+    }
+    .meta-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .section {
+      margin-top: 34px;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--sub);
+      font-size: 14px;
+      max-width: 700px;
+    }
+    .scenario-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .scenario {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .scenario:after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(22,119,255,0.08), rgba(22,119,255,0));
+      pointer-events: none;
+    }
+    .scenario-top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #eef4ff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .index {
+      font-size: 12px;
+      color: #7c8798;
+      font-weight: 600;
+    }
+    .scenario h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      line-height: 1.3;
+    }
+    .story {
+      margin: 0 0 14px;
+      color: var(--text);
+      font-size: 15px;
+    }
+    .row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(24,33,47,0.10);
+    }
+    .row strong {
+      display: inline-block;
+      min-width: 88px;
+      color: #0f1727;
+    }
+    .row span {
+      color: var(--sub);
+    }
+    .quote {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: rgba(22,119,255,0.06);
+      border-radius: 14px;
+      color: #0f3f86;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .footer {
+      margin-top: 34px;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.8);
+      color: var(--sub);
+      font-size: 14px;
+    }
+    @media (max-width: 900px) {
+      .grid-3, .grid-2, .scenario-grid { grid-template-columns: 1fr; }
+      .wrap { width: min(100vw - 24px, 1180px); padding-top: 18px; }
+      .hero { padding: 24px; border-radius: 22px; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="label">AI 支付宝 · 市场营销场景素材</div>
+      <h1>清爽、体贴、能办事：<br>把生活服务真正做成“边聊边办”的 AI 钱包</h1>
+      <p class="lead">
+        这份页面基于你给出的产品定位与原始场景，保留核心理念不丢失，并继续发散更适合市场传播的“有故事感”使用瞬间。
+        所有示例都围绕一个共识展开：不是让用户学习一个新 App，而是在熟悉的支付宝里，用一句话把真实世界的事办掉。
+      </p>
+
+      <div class="grid-3">
+        <div class="card meta-card">
+          <h3>一、AI 支付宝的产品定位</h3>
+          <ul>
+            <li><strong>产品理念：</strong>AI 普惠、人格化、链接真实世界</li>
+            <li><strong>用户视角：</strong>清爽、体贴、能办事</li>
+          </ul>
+        </div>
+        <div class="card meta-card">
+          <h3>二、三个关键表达</h3>
+          <ul>
+            <li>简版支付宝，清清爽爽</li>
+            <li>AI 版钱包，清清爽爽，贴心专业</li>
+            <li>聊着聊着把事办了的生活服务场景</li>
+          </ul>
+        </div>
+        <div class="card meta-card">
+          <h3>三、营销内容建议</h3>
+          <p>传播上优先讲“具体时刻”，少讲抽象能力。重点让用户看到：在忙、急、累、手上有事、脑子很乱的时候，AI 支付宝能顺手把事接过去。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>你原本已经非常成立的故事感场景</h2>
+        <p>先把已有素材沉淀下来，作为后续传播的核心母题：一句话办事、钱包更聪明、线下场景更顺手。</p>
+      </div>
+      <div class="scenario-grid">
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">原始示例 01</span></div>
+          <h3>机场打车，拿着行李，直接边说边办</h3>
+          <p class="story">刚下飞机，一手拖箱子一手看登机牌，最怕的是还要切来切去找车、比价、填地址。用户只说一句，AI 就把回家的路接起来。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我叫个车回家，快一点，别太贵。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别当前位置、推荐打车方案、补全常用地址、展示价格与等待时间，确认后直接下单支付。</span></div>
+          <div class="quote">传播点：手上拿着生活，嘴上说一句，事就办完了。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">原始示例 02</span></div>
+          <h3>路上出了事故，我该怎么办</h3>
+          <p class="story">人在慌的时候，最需要的不是更多入口，而是有人接住下一步。AI 不是只给答案，而是把流程往下接。</p>
+          <div class="row"><strong>用户一句话</strong><span>“刚出小事故了，我现在该怎么处理？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>先安抚情绪，再给出拍照取证、联系保险、判断是否挪车、调用相关服务与电话，必要时帮助发起理赔。</span></div>
+          <div class="quote">传播点：出了状况，不用自己想流程，先开口就行。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">原始示例 03</span></div>
+          <h3>交房租时，边聊边把房东联系方式调出来，直接转</h3>
+          <p class="story">每月最重复的事，不该每月都重新找一遍。AI 钱包把人、钱、备注和关系都记得更清楚。</p>
+          <div class="row"><strong>用户一句话</strong><span>“给房东转这个月房租，备注还是老样子。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>调出房东联系人、匹配历史转账、补全金额与备注、确认后完成付款。</span></div>
+          <div class="quote">传播点：不是会转账，而是懂你每个月都在转什么。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">原始示例 04</span></div>
+          <h3>收益不用翻，边聊边看清楚，还能顺手列出调仓计划</h3>
+          <p class="story">很多人不是不关心理财，而是信息太碎，越看越累。AI 把收益、波动和建议说成人话。</p>
+          <div class="row"><strong>用户一句话</strong><span>“昨天赚了多少？上个月整体表现怎么样？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>汇总昨日收益、上月收益、资产变化，生成简洁解释，并给出可执行的调仓待办清单。</span></div>
+          <div class="quote">传播点：不用懂很多术语，也能把钱看明白。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">原始示例 05</span></div>
+          <h3>账单不用翻，直接把“给猫花了多少”看清楚</h3>
+          <p class="story">真正有意思的钱包，不只是记流水，而是能把生活切成你关心的维度。</p>
+          <div class="row"><strong>用户一句话</strong><span>“这个月给猫花了多少钱？吃饭又花了多少？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>自动识别宠物、孩子、餐饮等主题消费，按月归类并生成趋势洞察。</span></div>
+          <div class="quote">传播点：账单不是一堆数字，而是你的生活地图。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">线下场景</span><span class="index">原始示例 06</span></div>
+          <h3>到了麻将馆，边聊边点奶茶、充值时间、顺手计分</h3>
+          <p class="story">真实世界的局，不会等你研究功能。AI 要像一个懂场子的朋友，知道你接下来想做什么。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我们点四杯奶茶，再充两小时，顺便开始记分。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>发起外卖、完成店内充值、创建计分页，并同步给同桌人查看。</span></div>
+          <div class="quote">传播点：AI 不在对话框里，在牌局进行中。</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>继续发散：更适合市场营销的故事感场景</h2>
+        <p>以下新增示例都遵循同一个传播结构：一个具体生活时刻 + 一句自然口语 + AI 串联多个动作 + 最后形成“原来这也能边聊边办”的记忆点。</p>
+      </div>
+      <div class="scenario-grid">
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">新增 01</span></div>
+          <h3>赶高铁时，检票口前突然发现没订接站车</h3>
+          <p class="story">人已经在站台边上，脑子里只剩“别迟到”。这时候 AI 最值钱的，是比你快一步补上遗漏。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我一会儿到杭州东，帮我安排到公司最快的路。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>综合打车、地铁、骑行方案，结合到站时间与天气推荐最优路径，确认后直接下单或导航。</span></div>
+          <div class="quote">传播点：行程出一点岔子，生活也不会乱。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">新增 02</span></div>
+          <h3>深夜孩子发烧，边问边挂号，边看附近药店</h3>
+          <p class="story">夜里最怕的是一边着急一边查信息。AI 接住问题，也接住下一步行动。</p>
+          <div class="row"><strong>用户一句话</strong><span>“孩子发烧了，附近还能挂号吗？要不要先买退烧药？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>先给基础判断建议，查询夜间门诊与药店营业情况，帮助挂号、导航、支付。</span></div>
+          <div class="quote">传播点：真正体贴，不只是回答，而是带着你往前走。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">新增 03</span></div>
+          <h3>下班路上想吃饭，不想选，直接让它替你决定</h3>
+          <p class="story">很多疲惫不是大事，是一整天都在做小决定。AI 可以先替你省掉最后一次犹豫。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我现在又累又饿，附近找个清淡点的，别太贵。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>结合位置、预算、过往偏好推荐餐厅或外卖，一键下单或导航。</span></div>
+          <div class="quote">传播点：不是更会搜，而是更懂你累的时候不想选。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">边聊边办事</span><span class="index">新增 04</span></div>
+          <h3>报销截止前一晚，票据乱成一团，边聊边整理</h3>
+          <p class="story">很多人的工作焦虑，最后都变成“材料去哪了”。AI 能把杂乱琐碎重新排成顺序。</p>
+          <div class="row"><strong>用户一句话</strong><span>“把我这周出差能报销的都整理出来。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别账单、发票、打车与酒店记录，自动汇总分类，生成报销清单与待补材料提醒。</span></div>
+          <div class="quote">传播点：工作的最后一公里，也能一句话补齐。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">新增 05</span></div>
+          <h3>月末快没钱了，不用焦虑翻账单，直接问“我钱花哪了”</h3>
+          <p class="story">真正让人有掌控感的，不是节省本身，而是终于知道问题出在哪。</p>
+          <div class="row"><strong>用户一句话</strong><span>“为什么这个月又超支了？帮我看最该省的是哪几项。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>对比上月与近三月支出，找出异常上涨项，给出省钱建议和可执行提醒。</span></div>
+          <div class="quote">传播点：省钱不是忍，是先看清楚。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">新增 06</span></div>
+          <h3>工资刚到账，边聊边把这个月的钱分好</h3>
+          <p class="story">很多人一发工资就知道该规划，但总拖着不做。AI 把“想规划”变成“已经分好了”。</p>
+          <div class="row"><strong>用户一句话</strong><span>“工资到了，先把房租、生活费、存款分一下。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>按用户习惯进行预算拆分，设置转账、余额留存、基金定投或提醒计划。</span></div>
+          <div class="quote">传播点：管钱，不必靠意志力。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">新增 07</span></div>
+          <h3>朋友结婚随礼，不记得以前给了多少，AI 帮你想起来</h3>
+          <p class="story">体面很多时候藏在细节里。AI 不只是记账，也记得人与人之间的分寸。</p>
+          <div class="row"><strong>用户一句话</strong><span>“小李结婚，我之前给同事都随多少来着？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>回顾历史红包或转账记录，给出参考区间，并支持直接发红包或转账。</span></div>
+          <div class="quote">传播点：不是冷冰冰的钱包，是有分寸感的钱包。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">钱包场景</span><span class="index">新增 08</span></div>
+          <h3>想知道“宠物是不是比自己吃得还贵”，一句话就出答案</h3>
+          <p class="story">当账单开始会讲故事，它就会变成能被分享的内容，而不是只被关闭的页面。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我这个月给自己和给猫谁花得更多？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别相关消费并做趣味对比，生成可分享的小结卡片。</span></div>
+          <div class="quote">传播点：账单分析，也可以有情绪和趣味。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">线下场景</span><span class="index">新增 09</span></div>
+          <h3>在便利店排队，发现会员券快过期，顺口一问就用掉</h3>
+          <p class="story">很多优惠不是用户不想用，而是来不及想起来。AI 能把“可用”变成“刚好用上”。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我现在买这几样，有没有快过期的券能用？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别消费场景，匹配可用优惠券、会员权益或组合立减，直接完成支付。</span></div>
+          <div class="quote">传播点：省下来，不靠记性好。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">线下场景</span><span class="index">新增 10</span></div>
+          <h3>停车场出口才想起没缴费，抬杆前直接边说边付</h3>
+          <p class="story">被后车催的时候，没有人想打开三层菜单。AI 最好的体验，是不耽误队伍也不耽误你。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我把停车费交了。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别当前停车场、查询待缴费用、确认车牌并支付。</span></div>
+          <div class="quote">传播点：现实世界越着急，AI 越应该简单。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">线下场景</span><span class="index">新增 11</span></div>
+          <h3>健身房刚练完，边擦汗边续卡、买蛋白饮</h3>
+          <p class="story">人已经很累的时候，任何额外操作都会被放弃。AI 适合接住这种“顺手就办了”的轻服务。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我续一个月，再买瓶高蛋白的。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>调用会员服务、完成支付、推荐附近可配送饮品或馆内商品。</span></div>
+          <div class="quote">传播点：从线上的支付工具，变成线下的行动助手。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">线下场景</span><span class="index">新增 12</span></div>
+          <h3>在夜市边走边买，不想每摊都掏手机，直接让它记账</h3>
+          <p class="story">生活越热闹，越没人想中断节奏。AI 可以边陪着逛，边把小额消费记明白。</p>
+          <div class="row"><strong>用户一句话</strong><span>“今晚夜市花了多少，帮我顺手记着。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>自动归集付款记录，实时汇总夜市开销，并在预算临界时轻提醒。</span></div>
+          <div class="quote">传播点：玩的时候尽兴，事后也清楚。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">家庭场景</span><span class="index">新增 13</span></div>
+          <h3>爸妈不会操作，电话里一句“你帮我弄一下”就够了</h3>
+          <p class="story">很多 AI 产品都只对年轻人友好，但真正普惠的 AI，要能跨代际接住一家人。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我看看我爸那个水电费是不是还没交。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>切换家庭代办视角，查询待办账单、生成提醒，支持代付或发给家人确认。</span></div>
+          <div class="quote">传播点：AI 不是只服务一个人，而是帮一个家更省心。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">家庭场景</span><span class="index">新增 14</span></div>
+          <h3>接娃路上突然想到学费、午餐费，边走边查边交</h3>
+          <p class="story">家庭事务最大的难点，是碎，而且总是在最忙的时候一起冒出来。</p>
+          <div class="row"><strong>用户一句话</strong><span>“帮我看看孩子学校这周还有什么没交。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>调取校园缴费、午餐费、活动费等待办项，支持批量处理与提醒。</span></div>
+          <div class="quote">传播点：家里的杂事，也能像聊天一样处理掉。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">家庭场景</span><span class="index">新增 15</span></div>
+          <h3>老人复诊快到了，不用翻日历，直接顺着聊下去</h3>
+          <p class="story">对很多家庭来说，真正重要的不是提醒本身，而是提醒之后有人继续把流程接下去。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我妈下周是不是该复诊了？顺便看看怎么去方便。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>识别历史就医时间，提示复诊节点，并串联挂号、出行、缴费、陪诊信息。</span></div>
+          <div class="quote">传播点：体贴，是把牵挂变成具体行动。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">工作场景</span><span class="index">新增 16</span></div>
+          <h3>开会前 3 分钟，边聊边把同事 AA 的午饭钱收齐</h3>
+          <p class="story">协作里的小尴尬，往往来自不好意思催。AI 可以帮你自然地完成这些“低价值但必须做”的动作。</p>
+          <div class="row"><strong>用户一句话</strong><span>“午饭一共 168，帮我按 6 个人收一下。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>生成 AA 收款，匹配群成员或联系人，附上说明并自动提醒未支付的人。</span></div>
+          <div class="quote">传播点：不好开口的琐事，也能被体面处理。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">工作场景</span><span class="index">新增 17</span></div>
+          <h3>出差刚落地，边走边把酒店发票、打车、餐费归到一起</h3>
+          <p class="story">好的 AI 不是回到公司才帮你整理，而是在事情发生的当下就帮你记住。</p>
+          <div class="row"><strong>用户一句话</strong><span>“把这次深圳出差的消费都单独归档。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>自动按项目或出差标签聚合消费，方便后续报销与复盘。</span></div>
+          <div class="quote">传播点：边发生，边整理，后面就不会乱。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">社交场景</span><span class="index">新增 18</span></div>
+          <h3>朋友生日快到了，礼物没想好，预算也没定</h3>
+          <p class="story">社交压力最怕时间突然逼近。AI 能把“我得准备一下”迅速推进到“已经准备好了”。</p>
+          <div class="row"><strong>用户一句话</strong><span>“周末朋友生日，预算 300，帮我搞定一个别太敷衍的礼物。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>根据对方画像或通用场景推荐礼物，完成购买、填写地址、附上生日红包建议。</span></div>
+          <div class="quote">传播点：不只是买东西，是帮你把心意及时送到。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">社交场景</span><span class="index">新增 19</span></div>
+          <h3>聚餐结束大家都在推让，AI 一句话把局收掉</h3>
+          <p class="story">一顿饭最后最容易陷入混乱。谁请、谁分、谁转，经常比点菜还耗神。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我先付了，帮我按人均发起 AA。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>读取账单金额，拆分人均，发起收款并在群里同步状态。</span></div>
+          <div class="quote">传播点：一顿饭的收尾，也可以很体面。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">应急场景</span><span class="index">新增 20</span></div>
+          <h3>手机快没电，陌生城市里还要找充电、找路、找住处</h3>
+          <p class="story">应急场景里，AI 的价值就是少说废话，优先保命、保电、保落脚。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我手机快没电了，帮我找最近能充电、能坐一下的地方。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>结合位置推荐最近商场、便利店、充电宝点位或酒店休息方案，并给出最短路线。</span></div>
+          <div class="quote">传播点：人最慌的时候，AI 要像一个可靠的人。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">应急场景</span><span class="index">新增 21</span></div>
+          <h3>身份证没带，临时办事卡住，边问边找最近可处理窗口</h3>
+          <p class="story">很多公共服务的难点，不在规则，而在不知道下一步往哪走。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我现在要办这个事，但证件没带，附近哪里能补办或者用电子证件？”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>解释办理条件、调用电子证件、查询附近办事点和营业时间，并给出路线。</span></div>
+          <div class="quote">传播点：真实世界的麻烦，也能被 AI 接到线下去解决。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">旅行场景</span><span class="index">新增 22</span></div>
+          <h3>周末临时起意出门，不做攻略，边聊边拼完整个行程</h3>
+          <p class="story">越来越多人想要的是“说走就走”，但真正拦住人的，是订票、路线、预算、天气这些碎环节。</p>
+          <div class="row"><strong>用户一句话</strong><span>“这周末想去苏州轻松逛一天，帮我安排一个不用动脑的行程。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>串联车票、景点、餐厅、返程时间与预算建议，必要时直接预订与支付。</span></div>
+          <div class="quote">传播点：从出门灵感，到行程落地，中间不用切出去。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">旅行场景</span><span class="index">新增 23</span></div>
+          <h3>异地打车怕被绕，AI 先把常识和价格兜住</h3>
+          <p class="story">陌生城市里，用户需要的不只是叫车，而是被照顾到“我不熟”的那部分不安。</p>
+          <div class="row"><strong>用户一句话</strong><span>“从这儿去酒店正常多少钱？帮我叫个靠谱点的。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>预估合理价格区间，推荐车型与预计时间，并发起叫车。</span></div>
+          <div class="quote">传播点：懂目的地，也懂人在陌生地方会不安。</div>
+        </article>
+
+        <article class="card scenario">
+          <div class="scenario-top"><span class="tag">消费场景</span><span class="index">新增 24</span></div>
+          <h3>想买东西，但怕冲动消费，AI 先帮你踩一脚刹车</h3>
+          <p class="story">好的钱包，不只是帮你花得更顺，也该帮你在该冷静的时候冷静一下。</p>
+          <div class="row"><strong>用户一句话</strong><span>“我又想买这个了，帮我看看最近是不是已经买太多了。”</span></div>
+          <div class="row"><strong>AI 串联动作</strong><span>结合近期同类消费、预算剩余和历史后悔记录，给出理性提醒或替代方案。</span></div>
+          <div class="quote">传播点：体贴，不只是满足你，也会适时拉你一把。</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>适合营销传播的统一表达方式</h2>
+        <p>这些不是额外功能堆砌，而是一种稳定的认知框架：用户一句自然话术，AI 帮他跨过“找入口、理流程、调信息、做支付、留后续”这几个断点。</p>
+      </div>
+      <div class="grid-2">
+        <div class="card meta-card">
+          <h3>推荐母句</h3>
+          <ul>
+            <li>不是多一个入口，是少很多步骤。</li>
+            <li>不是会聊天，是聊着聊着把事办了。</li>
+            <li>不是只懂线上，而是能接住真实世界。</li>
+            <li>不是更复杂的支付宝，而是更清爽的 AI 支付宝。</li>
+          </ul>
+        </div>
+        <div class="card meta-card">
+          <h3>推荐传播抓手</h3>
+          <ul>
+            <li>优先用“手上有东西、人在赶路、脑子很乱”的场景做广告片。</li>
+            <li>优先讲“少切换、少记忆、少犹豫、少出错”这四类价值。</li>
+            <li>把 AI 从“回答问题”转成“带着完成动作”的感知。</li>
+            <li>把钱包从“资金入口”升级成“生活决策与执行中枢”。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      备注：这份 HTML 已保留你原始输入中的产品定位与典型场景，并补充了更适合市场营销使用的新增故事化场景。
+      如果后续要继续升级，最适合往下走的两个方向是：1）改写成广告片脚本版；2）改写成海报标题 / 短视频口播 / 发布会案例页版。
+    </div>
+  </div>
+</body>
+</html>
